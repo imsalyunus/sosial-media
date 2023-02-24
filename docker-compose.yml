@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  sosmed:
+    image: sosmed
+    ports:
+      - 83:80
+    environment:
+      host: "db"
+      user: "imsal"
+      pass: "admin"
+      name: "sosmed_db"
+    depends_on:
+      - db
+  db:
+    image: mysql:latest
+    container_name: db-sosmed
+    environment:
+      MYSQL_HOST: "sosmed"
+      MYSQL_ROOT_PASSWORD: "imsal"
+      MYSQL_USER: "imsal"
+      MYSQL_PASSWORD: "admin"
+      MYSQL_DATABASE: "sosmed_db"
+
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    ports:
+      - '3306:3306'
