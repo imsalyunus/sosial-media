@@ -1,3 +1,5 @@
+<?php
+
 $db_host = $_ENV["DB_HOST"];
 $db_user = $_ENV["DB_USERNAME"];
 $db_pass = $_ENV["DB_PASSWORD"];
