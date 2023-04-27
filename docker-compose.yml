@@ -1,27 +1,26 @@
 version: "3.9"
 services:
   sosmed:
-    image: sosmed
+    image: sosmed-imsal
     ports:
-      - 83:80
+    - 80:80
     environment:
-      host: "db"
-      user: "imsal"
-      pass: "admin"
-      name: "sosmed_db"
+      DB_HOST: "mysql"
+      DB_USERNAME: "imsal"
+      DB_PASSWORD: "admin123"
+      DB_NAME: "db-sosmed"
     depends_on:
-      - db
-  db:
-    image: mysql:latest
-    container_name: db-sosmed
+      - mysql
+  mysql:
+    image: "mysql:latest"
+    container_name: sosmed-imsal
     environment:
-      MYSQL_HOST: "sosmed"
-      MYSQL_ROOT_PASSWORD: "imsal"
+      MYSQL_ROOT_PASSWORD: "admin123"
       MYSQL_USER: "imsal"
-      MYSQL_PASSWORD: "admin"
-      MYSQL_DATABASE: "sosmed_db"
-
+      MYSQL_PASSWORD: "admin123"
+      MYSQL_DATABASE: "db-sosmed"
+      MYSQL_HOST: "sosmed"
     volumes:
-      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+       - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
     ports:
-      - '3306:3306'
+    - '3306:3306'
