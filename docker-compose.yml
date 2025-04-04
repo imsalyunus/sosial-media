@@ -1,4 +1,5 @@
 version: "3.9"
+<<<<<<< HEAD
 services:
   web:
     container_name: web
@@ -10,3 +11,36 @@ services:
   db:
     container_name: db
     image: profesorgreen36/sosmed-db:${GIT_COMMIT_SHORT}
+=======
+
+services:
+  sosialmedia:
+    image: sosialmedia:v1.0.0
+    container_name: sosialmedia
+    ports:
+      - 82:80
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=imsalyunus
+      - DB_PASS=DevOps
+      - DB_NAME=dbsosmed
+    
+    # Menjalankan service mysql dulu kemudian service sosialmedia
+    depends_on:
+      - mysql 
+  
+  mysql:
+    image: mysql:5.7 #https://hub.docker.com/layers/library/mysql/5.7/images/sha256-dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da?context=explore
+    container_name: mysql
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=DevOps
+      - MYSQL_DATABASE=dbsosmed
+      - MYSQL_USER=imsalyunus
+      - MYSQL_PASSWORD=DevOps
+      
+      # Mengimpor data dari local ke dalam MySQL yaitu data_dump.sql
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/data_dump.sql
+>>>>>>> fcb9587108674920a8a7f6387102a274118fc2e7
