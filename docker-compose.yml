@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  web:
+    container_name: web
+    image: profesorgreen36/sosmed-web:${GIT_COMMIT_SHORT}
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+  db:
+    container_name: db
+    image: profesorgreen36/sosmed-db:${GIT_COMMIT_SHORT}
