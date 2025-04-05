@@ -1,17 +1,4 @@
 version: "3.9"
-<<<<<<< HEAD
-services:
-  web:
-    container_name: web
-    image: profesorgreen36/sosmed-web:${GIT_COMMIT_SHORT}
-    ports:
-      - "80:80"
-    depends_on:
-      - db
-  db:
-    container_name: db
-    image: profesorgreen36/sosmed-db:${GIT_COMMIT_SHORT}
-=======
 
 services:
   sosialmedia:
@@ -43,4 +30,3 @@ services:
       # Mengimpor data dari local ke dalam MySQL yaitu data_dump.sql
     volumes:
       - ./dump.sql:/docker-entrypoint-initdb.d/data_dump.sql
->>>>>>> fcb9587108674920a8a7f6387102a274118fc2e7
