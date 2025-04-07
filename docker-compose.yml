@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   sosialmedia:
+    build: .
     image: sosialmedia:v1.0.0
     container_name: sosialmedia
     ports:
