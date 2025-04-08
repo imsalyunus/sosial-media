@@ -1,0 +1,120 @@
+pipeline {
+    agent any // Gunakan agen Jenkins manapun yang tersedia untuk menjalankan pipeline
+
+    environment {
+        // Nama image yang akan dibuat dan di-push ke Docker Hub
+        IMAGE_NAME = "imsalyunus/sosial-media"
+        // Tag image-nya diambil dari nomor build Jenkins, jadi selalu unik
+        DOCKER_TAG = "${BUILD_NUMBER}"
+        // URL repository GitHub tempat source code aplikasi berada
+        REPO_URL = "https://github.com/imsalyunus/sosial-media"
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                echo 'Cloning source code from GitHub...'
+                // Tarik source code dari GitHub ke workspace Jenkins
+                git url: "${env.REPO_URL}"
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker image...'
+                // Build Docker image dari Dockerfile di repo
+                sh "docker build -t ${IMAGE_NAME}:${DOCKER_TAG} ."
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running smoke test...'
+                 // Jalankan perintah shell bertahap
+                sh """
+                     # Hapus container lama jika masih ada
+                     docker rm -f test-container || true
+                     
+                     # Jalankan container sementara dari image hasil build
+                     docker run -d -p 89:80 --name test-container ${IMAGE_NAME}:${DOCKER_TAG}
+
+                     # Tunggu beberapa detik supaya container siap menerima request
+                     sleep 5
+
+                     # Kirim request ke localhost:8080 (port dari container) dan gagal jika tidak ada respon
+                     # Kalau gagal, tampilkan log dari container biar tahu error-nya, lalu hentikan pipeline
+                     curl -f http://localhost:89 || (echo 'App failed to respond'; docker logs test-container; exit 1)
+
+                     # Setelah test selesai, hapus container tes untuk menjaga kebersihan lingkungan
+                     docker rm -f test-container
+                  """
+
+                  echo 'Smoke test passed!' // Tampilkan pesan sukses jika semua lancar
+           }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                echo 'Pushing image to Docker Hub...'
+                // Gunakan kredensial Docker Hub yang sudah disimpan di Jenkins
+                // 'docker-hub-credentials' adalah ID credential di Jenkins
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    // Login ke Docker Hub
+                    sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+                    // Push image yang sudah dibuild
+                    sh "docker push ${IMAGE_NAME}:${DOCKER_TAG}"
+                }
+            }
+        }
+
+        stage('Generate Compose File') {
+            steps {
+                echo 'Generating docker-compose file with current tag...'
+                // Ganti placeholder __BUILD_NUMBER__ dengan nomor build sebenarnya,
+                // lalu simpan ke file baru agar tidak mengubah file aslinya
+                sh "sed 's/__BUILD_NUMBER__/${DOCKER_TAG}/g' docker-compose.yml > docker-compose.generated.yml"
+            }
+        }
+
+        stage('Deploy to Target Server') {
+            steps {
+                echo 'Deploying to remote server...'
+                // Kirim file dan jalankan perintah ke server target via SSH
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'Server Target', // Nama konfigurasi SSH yang harus kamu buat di Jenkins > Manage Jenkins > SSH
+                            transfers: [
+                                sshTransfer(
+                                    // File yang mau dikirim ke server target
+                                    sourceFiles: 'docker-compose.generated.yml,dump.sql',
+                                    // Direktori tujuan di server target (relatif dari /home/ubuntu)
+                                    remoteDirectory: 'sosial-media',
+                                    removePrefix: '',
+                                    // Perintah yang dijalankan di server setelah file dikirim
+                                    execCommand: '''
+                                        cd /home/ubuntu/sosial-media
+                                        docker-compose -f docker-compose.generated.yml up -d
+                                    '''
+                                )
+                            ],
+                            usePromotionTimestamp: false,
+                            verbose: true
+                        )
+                    ]
+                )
+            }
+        }
+    }
+
+    post {
+        success {
+            // Notifikasi jika pipeline berhasil
+            echo 'CI/CD pipeline completed successfully!'
+        }
+        failure {
+            // Notifikasi jika pipeline gagal
+            echo 'CI/CD pipeline failed.'
+        }
+    }
+}
