@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   sosialmedia:
-    image: imsalyunus/sosialmedia:__BUILD_NUMBER__
+    image: imsalyunus/sosial-media:__BUILD_NUMBER__
     container_name: sosialmedia
     ports:
       - 82:80
