@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   sosialmedia:
-    image: sosialmedia
+    image: sosialmedia:${BUILD_NUMBER}
     container_name: sosialmedia
     ports:
       - 82:80
