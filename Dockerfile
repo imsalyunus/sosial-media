@@ -1,8 +1,13 @@
-# Menggunakan image dasar PHP dengan Apache
-FROM php:7.1-apache
+FROM php:8.2-apache
 
-# Memasang ekstensi PHP yang diperlukan untuk mendukung MySQL
+# Update paket OS
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
+
+# Install ekstensi PHP yang dibutuhkan
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Menyalin semua file dari direktori kerja lokal ke direktori /var/www/html di dalam kontainer
-COPY . /var/www/html
+# Copy source code
+COPY . /var/www/html/
+
+# Set permission
+RUN chown -R www-data:www-data /var/www/html
