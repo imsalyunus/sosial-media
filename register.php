@@ -5,12 +5,11 @@ require_once("config.php");
 if(isset($_POST['register'])){
 
     // filter data yang diinputkan
-    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+    $name = htmlspecialchars(trim($_POST['name']));
+    $username = htmlspecialchars(trim($_POST['username']));
     // enkripsi password
     $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-
 
     // menyiapkan query
     $sql = "INSERT INTO users (name, username, email, password) 
@@ -34,7 +33,7 @@ if(isset($_POST['register'])){
 }
 
 ?>
-
+    
 <!DOCTYPE html>
 <html lang="en">
 <head>
