@@ -1,15 +1,11 @@
-FROM php:8.3-alpine
+FROM php:8.2-cli-alpine
 
-# Update & install Apache + ekstensi PHP
-RUN apk update && apk upgrade --no-cache && \
-    apk add --no-cache apache2 apache2-utils && \
-    docker-php-ext-install mysqli pdo pdo_mysql
+RUN apk update && apk upgrade --no-cache
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 COPY . /var/www/html/
 
-# Konfigurasi Apache supaya jalan di foreground
-CMD ["httpd", "-D", "FOREGROUND"]
-
 EXPOSE 80
+
+CMD ["php", "-S", "0.0.0.0:80"]
