@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 # Update paket OS agar tidak ada CVE lama
 RUN apt-get update --allow-releaseinfo-change && \
