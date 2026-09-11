@@ -1,15 +1,12 @@
-FROM php:8.3-apache-bullseye
+FROM php:8.3-apache-alpine
 
-# Fix expired repo issue (Bullseye kadang repo security expired)
-RUN apt-get update --allow-releaseinfo-change && \
-    apt-get dist-upgrade -y && \
-    rm -rf /var/lib/apt/lists/*
+# Update & upgrade paket OS
+RUN apk update && apk upgrade && rm -rf /var/cache/apk/*
 
 # Install ekstensi PHP yang dibutuhkan
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Copy source code ke dalam container
+# Copy source code
 COPY . /var/www/html/
 
-# Expose port Apache
 EXPOSE 80
