@@ -1,9 +1,15 @@
-FROM php:apache
+FROM php:8.3-alpine
 
-RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
+# Update & install Apache + ekstensi PHP
+RUN apk update && apk upgrade --no-cache && \
+    apk add --no-cache apache2 apache2-utils && \
+    docker-php-ext-install mysqli pdo pdo_mysql
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 COPY . /var/www/html/
+
+# Konfigurasi Apache supaya jalan di foreground
+CMD ["httpd", "-D", "FOREGROUND"]
 
 EXPOSE 80
