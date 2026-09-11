@@ -1,4 +1,4 @@
-FROM php:8.2-apache-bookworm-slim
+FROM php:8.2-apache-bullseye
 
 # Update paket OS agar tidak ada CVE lama
 RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
