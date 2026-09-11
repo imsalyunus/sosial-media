@@ -1,6 +1,6 @@
 FROM php:apache
 
-RUN apk update && apk upgrade --no-cache
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
