@@ -9,12 +9,12 @@ services:
     environment:
       - DB_HOST=mysql
       - DB_USER=imsalyunus
-      - DB_PASS=DevOps
+      - DB_PASS=${DB_PASSWORD}
       - DB_NAME=dbsosmed
     
     # Menjalankan service mysql dulu kemudian service sosialmedia
     depends_on:
-      - mysql 
+      - mysql
   
   mysql:
     image: mysql:5.7 #https://hub.docker.com/layers/library/mysql/5.7/images/sha256-dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da?context=explore
@@ -22,11 +22,11 @@ services:
     ports:
       - 3306:3306
     environment:
-      - MYSQL_ROOT_PASSWORD=DevOps
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=dbsosmed
       - MYSQL_USER=imsalyunus
-      - MYSQL_PASSWORD=DevOps
+      - MYSQL_PASSWORD=${DB_PASSWORD}
       
-      # Mengimpor data dari local ke dalam MySQL yaitu data_dump.sql
+    # Mengimpor data dari local ke dalam MySQL yaitu data_dump.sql
     volumes:
-      - ./dump.sql:/docker-entrypoint-initdb.d/data_dump.sql
+      - ./dump.sql:/docker-entrypoint-initdb.d/data_dump.sql     
