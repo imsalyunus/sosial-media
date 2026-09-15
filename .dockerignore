@@ -6,5 +6,6 @@ dump.sql
 docker-compose.yml
 Dockerfile
 .dockerignore
+.htaccess
 README.md
 *.log
