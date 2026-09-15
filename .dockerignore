@@ -5,5 +5,6 @@
 dump.sql
 docker-compose.yml
 Dockerfile
+.dockerignore
 README.md
 *.log
