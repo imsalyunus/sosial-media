@@ -16,7 +16,7 @@ services:
     depends_on:
       - mysql
   
-  mysql-dev:
+  mysql:
     image: mysql:5.7 #https://hub.docker.com/layers/library/mysql/5.7/images/sha256-dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da?context=explore
     container_name: mysql
     ports:
