@@ -11,7 +11,7 @@ services:
       - "83:80"
 
     environment:
-      DB_HOST: mysql-prod
+      DB_HOST: mysql
       DB_USER: imsalyunus
       DB_PASS: ${DB_PASSWORD}
       DB_NAME: dbsosmed
@@ -21,7 +21,7 @@ services:
 
   mysql:
     image: mysql:5.7
-    container_name: mysql-prod
+    container_name: mysql
     ports:
       - "3306:3306"    
     environment:
@@ -38,4 +38,4 @@ services:
 
 volumes:
 
-  mysql_prod_data:
+  mysql_data:
