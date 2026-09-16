@@ -8,7 +8,7 @@ services:
     container_name: sosialmedia-prod
 
     ports:
-      - "80:80"
+      - "83:80"
 
     environment:
       DB_HOST: mysql-prod
@@ -17,15 +17,13 @@ services:
       DB_NAME: dbsosmed
 
     depends_on:
-      - mysql-prod
+      - mysql
 
-    restart: unless-stopped
-
-  mysql-prod:
+  mysql:
     image: mysql:5.7
-
     container_name: mysql-prod
-
+    ports:
+      - "3306:3306"    
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: dbsosmed
@@ -33,10 +31,9 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
 
     volumes:
-      - mysql_prod_data:/var/lib/mysql
-      - ./dump.sql:/docker-entrypoint-initdb.d/data_dump.sql
+      - mysql_data:/var/lib/mysql
+      #- ./dump.sql:/docker-entrypoint-initdb.d/data_dump.sql
 
-    restart: unless-stopped
 
 
 volumes:
