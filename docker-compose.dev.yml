@@ -14,14 +14,13 @@ services:
     
     # Menjalankan service mysql dulu kemudian service sosialmedia
     depends_on:
-      - mysql-dev
-    restart: unless-stopped
+      - mysql
   
   mysql-dev:
     image: mysql:5.7 #https://hub.docker.com/layers/library/mysql/5.7/images/sha256-dab0a802b44617303694fb17d166501de279c3031ddeb28c56ecf7fcab5ef0da?context=explore
-    container_name: mysql-dev
-    #ports:
-      #- 3306:3306
+    container_name: mysql
+    ports:
+      - 3306:3306
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=dbsosmed
@@ -30,10 +29,8 @@ services:
       
     # Mengimpor data dari local ke dalam MySQL yaitu data_dump.sql
     volumes:
-      - mysql_dev_data:/var/lib/mysql
-      - ./dump.sql:/docker-entrypoint-initdb.d/data_dump.sql
-
-    restart: unless-stopped
+      - mysql_data:/var/lib/mysql
+      #- ./dump.sql:/docker-entrypoint-initdb.d/data_dump.sql
     
 volumes:
-  mysql_dev_data:
+  mysql_data:
