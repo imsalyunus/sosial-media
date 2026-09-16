@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+
+  sosialmedia-prod:
+    image: imsalyunus/sosial-media:${BUILD_NUMBER}
+
+    container_name: sosialmedia-prod
+
+    ports:
+      - "80:80"
+
+    environment:
+      DB_HOST: mysql-prod
+      DB_USER: imsalyunus
+      DB_PASS: ${DB_PASSWORD}
+      DB_NAME: dbsosmed
+
+    depends_on:
+      - mysql-prod
+
+    restart: unless-stopped
+
+  mysql-prod:
+    image: mysql:5.7
+
+    container_name: mysql-prod
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: dbsosmed
+      MYSQL_USER: imsalyunus
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+
+    volumes:
+      - mysql_prod_data:/var/lib/mysql
+      - ./dump.sql:/docker-entrypoint-initdb.d/data_dump.sql
+
+    restart: unless-stopped
+
+
+volumes:
+
+  mysql_prod_data:
