@@ -7,7 +7,7 @@ services:
     ports:
       - 82:80
     environment:
-      - DB_HOST=mysql-dev
+      - DB_HOST=mysql
       - DB_USER=imsalyunus
       - DB_PASS=${DB_PASSWORD}
       - DB_NAME=dbsosmed
