@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   sosialmedia-prod:
-    image: imsalyunus/sosial-media:${BUILD_NUMBER}
+    image: imsalyunus/sosial-media:${TAG_IMAGE}
 
     container_name: sosialmedia-prod
 
