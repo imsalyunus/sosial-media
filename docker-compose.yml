@@ -30,7 +30,7 @@ services:
     # Mengimpor data dari local ke dalam MySQL yaitu data_dump.sql
     volumes:
       - mysql_data:/var/lib/mysql
-      #- ./dump.sql:/docker-entrypoint-initdb.d/data_dump.sql
+      - ./dump.sql:/docker-entrypoint-initdb.d/data_dump.sql
     
 volumes:
   mysql_data:
