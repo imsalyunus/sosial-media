@@ -1,12 +1,26 @@
 FROM php:8.2-cli-alpine
 
-RUN apk update && apk upgrade --no-cache
-
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+RUN addgroup -S appgroup && \
+    adduser -S appuser -G appgroup && \
+    docker-php-ext-install mysqli pdo pdo_mysql
 
 WORKDIR /var/www/html/
 
-COPY . /var/www/html
+COPY auth.php .
+COPY config.php .
+COPY index.php .
+COPY login.php .
+COPY logout.php .
+COPY register.php .
+COPY timeline.php .
+
+COPY css ./css
+COPY img ./img
+COPY js ./js
+
+RUN chown -R appuser:appgroup /var/www/html
+
+USER appuser
 
 EXPOSE 80
 
