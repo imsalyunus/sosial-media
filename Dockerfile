@@ -1,7 +1,9 @@
 FROM php:8.2-cli-alpine
 
 RUN apk update && apk upgrade --no-cache && \
-    docker-php-ext-install mysqli pdo pdo_mysql
+    docker-php-ext-install mysqli pdo pdo_mysql && \
+    addgroup -S appgroup && \
+    adduser -S appuser -G appgroup
 
 WORKDIR /var/www/html/
 
@@ -16,6 +18,10 @@ COPY timeline.php .
 COPY css ./css
 COPY img ./img
 COPY js ./js
+
+RUN chown -R appuser:appgroup /var/www/html
+
+USER appuser
 
 EXPOSE 80
 
